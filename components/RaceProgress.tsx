@@ -5,6 +5,8 @@ export type RaceMarker = {
   progress: number;
   wpm?: number;
   cpm?: number;
+  score?: number;
+  lives?: number;
 };
 
 type RaceProgressProps = {
@@ -24,17 +26,23 @@ export default function RaceProgress({ markers }: RaceProgressProps) {
           const left = `${Math.max(0, Math.min(100, marker.progress * 100))}%`;
           return (
             <div
-              key={`${marker.kind}-${marker.name}`}
+              key={`${marker.kind}-${marker.name}-${marker.label}`}
               className={`raceMarker ${marker.kind}`}
               style={{ left }}
-              title={`${marker.name} - ${(marker.progress * 100).toFixed(0)}%${
-                marker.wpm ? ` - ${marker.wpm.toFixed(2)} WPM / ${marker.cpm?.toFixed(2)} CPM` : ""
-              }`}
+              title={`${marker.name} - ${(marker.progress * 100).toFixed(0)}%`}
             >
               {marker.label}
             </div>
           );
         })}
+      </div>
+
+      <div className="raceNames">
+        {markers.map((marker) => (
+          <span key={`${marker.kind}-${marker.name}-name`} className={marker.kind}>
+            {marker.label}: {marker.name}
+          </span>
+        ))}
       </div>
     </section>
   );

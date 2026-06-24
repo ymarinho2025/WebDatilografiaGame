@@ -9,6 +9,8 @@ type HudProps = {
   accuracy: number;
   timeLeft: number;
   botStats: string;
+  roomCode: string | null;
+  playerName: string;
 };
 
 export default function Hud({
@@ -21,7 +23,9 @@ export default function Hud({
   cpm,
   accuracy,
   timeLeft,
-  botStats
+  botStats,
+  roomCode,
+  playerName
 }: HudProps) {
   const hearts = "❤ ".repeat(lives) + "♡ ".repeat(Math.max(0, 3 - lives));
 
@@ -33,6 +37,8 @@ export default function Hud({
         <span>
           Fase {phaseNumber}/{totalPhases} | {phaseTitle}
         </span>
+        <span>{playerName}</span>
+        {roomCode && <span className="roomBadge">Sala: {roomCode}</span>}
         <span className="timer">Tempo: {Math.max(0, Math.ceil(timeLeft))}s</span>
       </div>
 

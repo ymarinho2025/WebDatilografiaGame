@@ -1,42 +1,22 @@
-# Cartas para o Farol — Versão Web para Vercel
+# Cartas para o Farol — Web Multiplayer + Mobile
 
-Este projeto é a versão web do jogo **Cartas para o Farol**, pronto para publicar na Vercel.
+Esta é a versão web para Vercel com:
 
-## O que está incluído
-
-- Next.js + React.
-- Visual de mesa de datilografia.
-- Texto por linhas.
-- Digitação em tempo real, sem Enter.
-- Roleta de risco.
-- 3 vidas.
-- Tela vermelha de derrota.
-- Pergunta do dobro do prêmio.
-- Pegadinha ao clicar em “Não”.
-- Barra de progresso visível.
-- Bots/NPCs andando em tempo real.
-- NPC Yuri: `25.1 WPM / 125.5 CPM`.
-- NPC Ana: `12.55 WPM / 62.75 CPM`, metade da velocidade do Yuri.
-- Som de tecla, erro, roleta, retorno da máquina e suspense de fundo.
-- Frases em ordem aleatória.
-- Fase “Noites escuras” em russo transliterado com alfabeto brasileiro.
-
-## Aviso sobre letras de músicas
-
-Este projeto não inclui letras completas de músicas protegidas por direitos autorais.  
-As fases com nomes de músicas usam textos autorais temáticos.
+- jogo single-player;
+- multiplayer online por salas;
+- código de sala para amigos;
+- Supabase Realtime;
+- bots/NPCs andando em tempo real;
+- suporte mobile com campo de digitação focado para abrir o teclado virtual;
+- visual de máquina de escrever;
+- roleta de risco;
+- 3 vidas;
+- barra de progresso de todos os jogadores.
 
 ## Rodar localmente
 
-Instale as dependências:
-
 ```bash
 npm install
-```
-
-Rode em modo desenvolvimento:
-
-```bash
 npm run dev
 ```
 
@@ -46,68 +26,113 @@ Abra:
 http://localhost:3000
 ```
 
-## Publicar na Vercel pelo GitHub
+## Configurar Supabase
 
-1. Crie um repositório no GitHub.
-2. Envie este projeto para o repositório.
-3. Entre na Vercel.
-4. Clique em **Add New Project**.
-5. Importe o repositório.
-6. Clique em **Deploy**.
+1. Crie um projeto no Supabase.
+2. Abra o **SQL Editor**.
+3. Cole e rode o conteúdo de:
 
-## Publicar pela Vercel CLI
+```text
+supabase/schema.sql
+```
 
-Instale a CLI:
+4. Vá em **Project Settings > API**.
+5. Copie:
+   - Project URL
+   - anon public key
+
+6. Crie um arquivo `.env.local` na raiz:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://SEU-PROJETO.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=SUA_CHAVE_ANON_PUBLICA
+```
+
+7. Rode novamente:
+
+```bash
+npm run dev
+```
+
+## Configurar na Vercel
+
+Na Vercel, adicione estas Environment Variables:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+```
+
+Depois faça deploy.
+
+## Como jogar online
+
+1. Um jogador clica em **Criar sala online**.
+2. O jogo mostra um código, por exemplo:
+
+```text
+FAROL-7XK2
+```
+
+3. O amigo abre o mesmo site.
+4. Digita o código.
+5. Clica em **Entrar na sala**.
+
+O seu marcador aparece em azul.  
+Os amigos aparecem em vermelho.  
+Os bots aparecem em vermelho claro.
+
+## Jogar no celular
+
+No celular:
+
+1. Abra o site.
+2. Toque em **Jogar sozinho**, **Criar sala online** ou **Entrar na sala**.
+3. O jogo tenta abrir o teclado automaticamente.
+4. Se o navegador bloquear, toque no botão:
+
+```text
+Toque aqui para digitar
+```
+
+Por segurança, navegadores mobile geralmente só abrem teclado após toque do usuário.  
+Por isso o jogo usa um input real, quase invisível, focado após o clique inicial.
+
+## Publicar na Vercel
+
+Pelo GitHub:
+
+```bash
+git init
+git add .
+git commit -m "cartas para o farol web multiplayer"
+git branch -M main
+git remote add origin LINK_DO_REPOSITORIO
+git push -u origin main
+```
+
+Depois importe o repositório na Vercel.
+
+Pela CLI:
 
 ```bash
 npm i -g vercel
-```
-
-Faça login:
-
-```bash
 vercel login
-```
-
-Deploy de teste:
-
-```bash
 vercel
-```
-
-Deploy final:
-
-```bash
 vercel deploy --prod
 ```
 
-## Estrutura
+## Arquivos principais
 
 ```text
-cartas-para-o-farol-vercel/
-├── app/
-│   ├── globals.css
-│   ├── layout.tsx
-│   └── page.tsx
-├── components/
-│   ├── GameClient.tsx
-│   ├── Hud.tsx
-│   ├── RaceProgress.tsx
-│   ├── Roulette.tsx
-│   └── TypewriterScene.tsx
-├── lib/
-│   ├── audio.ts
-│   ├── bots.ts
-│   ├── phrases.ts
-│   └── text.ts
-├── package.json
-├── next.config.mjs
-├── tsconfig.json
-├── vercel.json
-└── README.md
+components/GameClient.tsx
+lib/multiplayer.ts
+lib/supabaseClient.ts
+supabase/schema.sql
+app/globals.css
 ```
 
-## Observação sobre multiplayer
+## Observação
 
-Esta versão web é para publicar rápido e permitir que qualquer pessoa jogue pelo navegador com bots.  
-Para multiplayer real com salas online, o próximo passo recomendado é adicionar Supabase Realtime ou outro serviço WebSocket.
+Esta versão usa Supabase como backend Realtime.  
+Sem configurar Supabase, o modo solo funciona, mas salas online não funcionam.

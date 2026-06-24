@@ -25,9 +25,8 @@ export function splitIntoLines(text: string, maxChars = MAX_CHARS_PER_LINE): str
 
   for (const word of words) {
     if (!current) {
-      if (word.length <= maxChars) {
-        current = word;
-      } else {
+      if (word.length <= maxChars) current = word;
+      else {
         for (let i = 0; i < word.length; i += maxChars) {
           lines.push(word.slice(i, i + maxChars));
         }
@@ -40,9 +39,8 @@ export function splitIntoLines(text: string, maxChars = MAX_CHARS_PER_LINE): str
       current = candidate;
     } else {
       lines.push(current);
-      if (word.length <= maxChars) {
-        current = word;
-      } else {
+      if (word.length <= maxChars) current = word;
+      else {
         current = "";
         for (let i = 0; i < word.length; i += maxChars) {
           const chunk = word.slice(i, i + maxChars);
@@ -66,11 +64,15 @@ export function completedChars(lines: string[], lineIndex: number, typedLine: st
   return completed + typedLine.length;
 }
 
-export function shuffleArray<T>(items: T[]): T[] {
-  const copy = [...items];
-  for (let i = copy.length - 1; i > 0; i -= 1) {
+export function shuffleOrder(length: number): number[] {
+  const order = Array.from({ length }, (_, index) => index);
+  for (let i = order.length - 1; i > 0; i -= 1) {
     const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
+    [order[i], order[j]] = [order[j], order[i]];
   }
-  return copy;
+  return order;
+}
+
+export function applyOrder<T>(items: T[], order: number[]): T[] {
+  return order.map((index) => items[index]).filter(Boolean);
 }

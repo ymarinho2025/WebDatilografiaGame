@@ -3,10 +3,20 @@ let suspenseTimer: number | null = null;
 
 function getContext(): AudioContext | null {
   if (typeof window === "undefined") return null;
-  const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  const AudioCtx =
+    window.AudioContext ||
+    (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
   if (!AudioCtx) return null;
   if (!ctx) ctx = new AudioCtx();
   return ctx;
+}
+
+export function unlockAudio(): void {
+  const audio = getContext();
+  if (!audio) return;
+  if (audio.state === "suspended") {
+    void audio.resume();
+  }
 }
 
 export function beep(frequency: number, durationMs = 40, volume = 0.04): void {
